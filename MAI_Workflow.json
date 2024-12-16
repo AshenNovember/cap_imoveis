@@ -1,0 +1,649 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "formId": "JGblfLXv"
+      },
+      "type": "n8n-nodes-base.typeformTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -620,
+        -60
+      ],
+      "id": "debf180e-ed47-458d-8aa9-d2d3a89ca7ff",
+      "name": "Typeform Trigger",
+      "webhookId": "63e546d5-02d6-4e36-bc9f-81e189dd86cf",
+      "credentials": {
+        "typeformApi": {
+          "id": "E4gjOVcOOnAO0xur",
+          "name": "Typeform account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0855QC7QBU",
+          "mode": "list",
+          "cachedResultName": "leads-prioridade-1"
+        },
+        "text": "=Nome: {{ $json['First name'] }} {{ $json['Last name'] }}\nTelefone: {{ $json['Phone number'] }}\nEmail:{{ $json.Email }}\nTipo de Imóvel desejado: {{ $json['Qual o seu tipo de imóvel desejado?'] }}\nUrgência: {{ $json['Qual é o seu prazo para adquirir ou alugar um imóvel?'] }}\nTipo de Aquisição: {{ $json['Você procura alugar ou comprar o imóvel?'] }}\nOrçamento: {{ $json['Qual a faixa de preço desejada para o imóvel?__1'] }}\nBairro de preferência: {{ $json['Em qual bairro/cidade você gostaria que seu futuro imóvel estivesse localizado?'] }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -520,
+        180
+      ],
+      "id": "dc63e919-29b5-45ea-93ea-32419fa87345",
+      "name": "Slack",
+      "webhookId": "297546c6-d09d-4bce-b7ee-96d70b862bf1",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "zsWnPR0T1HGyTUNg",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5c120711-44b3-4bdc-89fe-3ab92612bc67",
+              "leftValue": "={{ $json['Qual é o seu prazo para adquirir ou alugar um imóvel?'] }}",
+              "rightValue": "Em até 1 mês",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "8cda2739-34ba-4308-b13c-12e9e823468e",
+              "leftValue": "={{ $json['Qual é o seu prazo para adquirir ou alugar um imóvel?'] }}",
+              "rightValue": "Preciso me mudar imediatamente",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "6633ccd3-fe89-45bc-b2e7-5c3738708e8b",
+              "leftValue": "={{ $json['Qual a faixa de preço desejada para o imóvel?'] }}",
+              "rightValue": "Acima de R$ 1.000.000",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -700,
+        180
+      ],
+      "id": "17a024cc-fdb3-423a-8d9f-90a142f1827d",
+      "name": "PRIORIDADE ALTA",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5c120711-44b3-4bdc-89fe-3ab92612bc67",
+              "leftValue": "={{ $json['Qual é o seu prazo para adquirir ou alugar um imóvel?'] }}",
+              "rightValue": "De 1 a 3 meses",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "9df51741-7531-4011-be06-acb080ea2636",
+      "name": "PRIORIDADE MÉDIA"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C084R8UA763",
+          "mode": "list",
+          "cachedResultName": "leads-prioridade-2"
+        },
+        "text": "=Nome: {{ $json['First name'] }} {{ $json['Last name'] }}\nTelefone: {{ $json['Phone number'] }}\nEmail:{{ $json.Email }}\nTipo de Imóvel desejado: {{ $json['Qual o seu tipo de imóvel desejado?'] }}\nUrgência: {{ $json['Qual é o seu prazo para adquirir ou alugar um imóvel?'] }}\nTipo de Aquisição: {{ $json['Você procura alugar ou comprar o imóvel?'] }}\nOrçamento: {{ $json['Qual a faixa de preço desejada para o imóvel?__1'] }}\nBairro de preferência: {{ $json['Em qual bairro/cidade você gostaria que seu futuro imóvel estivesse localizado?'] }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -520,
+        360
+      ],
+      "id": "777534b9-1570-4ff3-93f5-71b9d38b27e2",
+      "name": "Slack2",
+      "webhookId": "297546c6-d09d-4bce-b7ee-96d70b862bf1",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "zsWnPR0T1HGyTUNg",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0855MSQLNP",
+          "mode": "list",
+          "cachedResultName": "leads-prioridade-3"
+        },
+        "text": "=Nome: {{ $json['First name'] }} {{ $json['Last name'] }}\nTelefone: {{ $json['Phone number'] }}\nEmail:{{ $json.Email }}\nTipo de Imóvel desejado: {{ $json['Qual o seu tipo de imóvel desejado?'] }}\nUrgência: {{ $json['Qual é o seu prazo para adquirir ou alugar um imóvel?'] }}\nTipo de Aquisição: {{ $json['Você procura alugar ou comprar o imóvel?'] }}\nOrçamento: {{ $json['Qual a faixa de preço desejada para o imóvel?__1'] }}\nBairro de preferência: {{ $json['Em qual bairro/cidade você gostaria que seu futuro imóvel estivesse localizado?'] }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -520,
+        560
+      ],
+      "id": "724867df-d4f6-42e4-b5a8-f077f969d368",
+      "name": "Slack3",
+      "webhookId": "297546c6-d09d-4bce-b7ee-96d70b862bf1",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "zsWnPR0T1HGyTUNg",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "append",
+        "sheetId": "11F5fZXYofwvLfr08lMCv2M9VzxZR_fTpgyKkM8_DI2U",
+        "range": "A:B",
+        "options": {}
+      },
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        240,
+        -60
+      ],
+      "typeVersion": 1,
+      "id": "3ab88492-1c9a-4281-af25-1793f4081167",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Wyn5wHnubujfRsFY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "sheetId": "11F5fZXYofwvLfr08lMCv2M9VzxZR_fTpgyKkM8_DI2U",
+        "range": "A:D",
+        "options": {}
+      },
+      "name": "Google Sheets1",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        260,
+        180
+      ],
+      "typeVersion": 1,
+      "id": "ce6b4599-23e7-4142-8836-8024e7aaef3d",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Wyn5wHnubujfRsFY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5c120711-44b3-4bdc-89fe-3ab92612bc67",
+              "leftValue": "={{ $json['Agradecemos as informações! Gostaria de ver alguns imóveis selecionados ou prefere aguardar o contato de um agente?'] }}",
+              "rightValue": "Sim, gostaria de ver alguns imóveis.",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "1688387f-471c-4bcf-aa7f-cfd711958d49",
+              "leftValue": "={{ $json['Em qual bairro/cidade você gostaria que seu futuro imóvel estivesse localizado?'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "5857370d-2d91-4bba-a886-4eff3925b940",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -200,
+        -60
+      ],
+      "id": "37fc29e2-41a8-45b1-9bef-74a3059e4f9c",
+      "name": "DESEJA EMAIL?"
+    },
+    {
+      "parameters": {
+        "content": "https://github.com/ziggy-data/scraping_zap_imoveis",
+        "height": 80
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        420
+      ],
+      "id": "03463c81-4bea-4f94-b5bd-0f623d7966c5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 860,
+        "width": 400,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -760,
+        -80
+      ],
+      "id": "f5213ba7-a1a5-4e33-9fcc-d5916f2b0e12",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 480,
+        "width": 740,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        -80
+      ],
+      "id": "96a4ec89-35c9-478c-ab55-8b122f51f4d6",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5c120711-44b3-4bdc-89fe-3ab92612bc67",
+              "leftValue": "={{ $json['Qual é o seu prazo para adquirir ou alugar um imóvel?'] }}",
+              "rightValue": "Mais de 3 meses",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "222bd1e5-ad75-4267-925d-f7f70bba85f5",
+              "leftValue": "={{ $json['Qual é o seu prazo para adquirir ou alugar um imóvel?'] }}",
+              "rightValue": "Ainda não tenho prazo definido",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -700,
+        640
+      ],
+      "id": "2eaf854a-74b4-4145-96c8-934892377153",
+      "name": "PRIORIDADE BAIXA"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5c120711-44b3-4bdc-89fe-3ab92612bc67",
+              "leftValue": "={{ $json['bairro/cidade'] }}",
+              "rightValue": "={{ $('Typeform Trigger').item.json['Em qual bairro/cidade você gostaria que seu futuro imóvel estivesse localizado?'] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -200,
+        160
+      ],
+      "id": "5db70f3e-587d-4018-b636-5e70a078678c",
+      "name": "FILTRO DE LOCALIDADE"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "Confira as melhores opções de imóveis para você! 🏡",
+        "message": "=Enquanto você aguarda nossos agentes entrar em contato, encontramos algumas opções incríveis de imóveis que podem ser exatamente o que você está procurando. Aqui estão os destaques: <br/>\n<br/>\n<b>{{ $json.usersWithWeakPasswords[0].number }}. </b>{{ $json.usersWithWeakPasswords[0].local }} - {{ $json.usersWithWeakPasswords[0].descricao }} por {{ $json.usersWithWeakPasswords[0].valor }}.\n<br/>\n<b>{{ $json.usersWithWeakPasswords[1].number }}. </b>{{ $json.usersWithWeakPasswords[1].local }} - {{ $json.usersWithWeakPasswords[1].descricao }} por {{ $json.usersWithWeakPasswords[1].valor }}.\n<br/>\n<b>{{ $json.usersWithWeakPasswords[2].number }}. </b>{{ $json.usersWithWeakPasswords[2].local }} - {{ $json.usersWithWeakPasswords[2].descricao }} por {{ $json.usersWithWeakPasswords[2].valor }}.\n<hr/>\n📩 Email de contato: suporte@capimobiliaria.com.br <br/>\n📞 WhatsApp: (XX) XXXX-XXXX ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        20,
+        220
+      ],
+      "id": "9c5a36ab-7119-4380-9051-be3871579b77",
+      "name": "Gmail",
+      "webhookId": "6909f896-5426-4b50-b7c7-80f39c2904b9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Cb8fZHKx62F6jxcR",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "instructions": "I want you to select 3 results of the FILTRO DE LOCALIDADE, bringing the following information:\nbairro/cidade;\nlocal;\ndescricao;\nvalor;\n\nAND NUMBER THE RESULTS; PLEASE  BRING THE EMAIL FROM THE TYPEFORM\n\ntransform the result of valor in money currency, brazillian real to be exact, employing commas and dots to correct the amount. For example 500000 would be R$ 500.000,00",
+        "codeGeneratedForPrompt": "I want you to select 3 results of the FILTRO DE LOCALIDADE, bringing the following information:\nbairro/cidade;\nlocal;\ndescricao;\nvalor;\n\nAND NUMBER THE RESULTS; PLEASE  BRING THE EMAIL FROM THE TYPEFORM\n\ntransform the result of valor in money currency, brazillian real to be exact, employing commas and dots to correct the amount. For example 500000 would be R$ 500.000,00",
+        "jsCode": "const items = $input.all().map((item) => item.json);\nconst email = $(\"DESEJA EMAIL?\")\n  .all()\n  .map((item) => item.json)[0].Email;\n\nconst selectedItems = items.slice(0, 3).map((item, index) => {\n  item.valor = `R$ ${item.valor\n    .toFixed(2)\n    .replace(\".\", \",\")\n    .replace(/(\\d)(?=(\\d{3})+\\,)/g, \"$1.\")}`;\n  item.number = index + 1;\n  return item;\n});\n\nreturn {\n  usersWithWeakPasswords: selectedItems,\n  email: email,\n};\n"
+      },
+      "type": "n8n-nodes-base.aiTransform",
+      "typeVersion": 1,
+      "position": [
+        20,
+        20
+      ],
+      "id": "544fa8ba-a055-4ecb-aad4-3aca2ab5ab10",
+      "name": "AI Transform"
+    }
+  ],
+  "pinData": {
+    "Typeform Trigger": [
+      {
+        "json": {
+          "#": "9apdxjz4ztx7bsps9apdxjk08vh53j9r",
+          "First name": "Josias",
+          "Last name": "Cabreiro",
+          "Phone number": "'+5521978272321",
+          "Email": "ashenovember@gmail.com",
+          "Qual o seu tipo de imóvel desejado?": "Casa",
+          "Qual é o seu prazo para adquirir ou alugar um imóvel?": "Preciso me mudar imediatamente",
+          "Você procura alugar ou comprar o imóvel?": "Comprar",
+          "Other": "",
+          "Qual a faixa de preço desejada para o imóvel?": "",
+          "Qual a faixa de preço desejada para o imóvel?__1": "De R$ 300.001 a R$ 500.000",
+          "Em qual bairro/cidade você gostaria que seu futuro imóvel estivesse localizado?": "Rio de Janeiro",
+          "Agradecemos as informações! Gostaria de ver alguns imóveis selecionados ou prefere aguardar o contato de um agente?": "Sim, gostaria de ver alguns imóveis.",
+          "Response Type": "completed",
+          "Start Date (UTC)": "2024-12-16 05:32:26",
+          "Stage Date (UTC)": "",
+          "Submit Date (UTC)": "2024-12-16 05:33:35",
+          "Network ID": "f00d4813a5",
+          "Tags": ""
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Typeform Trigger": {
+      "main": [
+        [
+          {
+            "node": "PRIORIDADE ALTA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "DESEJA EMAIL?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PRIORIDADE ALTA": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PRIORIDADE MÉDIA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PRIORIDADE MÉDIA": {
+      "main": [
+        [
+          {
+            "node": "Slack2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PRIORIDADE BAIXA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack3": {
+      "main": [
+        []
+      ]
+    },
+    "Slack2": {
+      "main": [
+        []
+      ]
+    },
+    "Slack": {
+      "main": [
+        []
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "FILTRO DE LOCALIDADE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DESEJA EMAIL?": {
+      "main": [
+        [
+          {
+            "node": "FILTRO DE LOCALIDADE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PRIORIDADE BAIXA": {
+      "main": [
+        [
+          {
+            "node": "Slack3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FILTRO DE LOCALIDADE": {
+      "main": [
+        [
+          {
+            "node": "AI Transform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        []
+      ]
+    },
+    "AI Transform": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fc10d79a-d95a-427d-9d4e-31906d02e680",
+  "meta": {
+    "instanceId": "63c1e08afd3d9c5582bf056c8f66f726f37073cf9d1460de6b2b1ae7f2649a26"
+  },
+  "id": "5sv58T31o6kCMwMT",
+  "tags": []
+}
